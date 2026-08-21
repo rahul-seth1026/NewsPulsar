@@ -969,15 +969,14 @@ export const DatabasePage: React.FC<DatabasePageProps> = ({
                           </button>
                         )}
 
-                        <a
-                          href={art.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-1 bg-white hover:bg-[#00f0ff] text-black border border-black transition-colors"
-                          title="Open Original Source"
+                        <button
+                          onClick={() => handleSelectArticle(art)}
+                          className="p-1 bg-white hover:bg-[#00f0ff] text-black border border-black transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-black"
+                          title="Open Rephrased Article with Tags"
                         >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </a>
+                          <Sparkles className="w-3.5 h-3.5 text-black" />
+                          <span>READ</span>
+                        </button>
                       </div>
                     </td>
 
@@ -1045,14 +1044,15 @@ export const DatabasePage: React.FC<DatabasePageProps> = ({
                         <Bookmark className={`w-3.5 h-3.5 ${bookmarked ? 'fill-white' : ''}`} />
                       </button>
                     )}
-                    <a
-                      href={art.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-1 bg-white hover:bg-[#00f0ff] text-black border border-black"
+                    <button
+                      type="button"
+                      onClick={() => handleSelectArticle(art)}
+                      className="p-1 bg-white hover:bg-[#00f0ff] text-black border border-black cursor-pointer flex items-center gap-1 text-[11px] font-black"
+                      title="Open Rephrased Article with Tags"
                     >
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>READ</span>
+                    </button>
                   </div>
                 </div>
 

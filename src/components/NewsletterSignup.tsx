@@ -278,18 +278,16 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
             ) : (
               <ol className="list-decimal list-inside space-y-1 text-[11px] font-medium text-zinc-800">
                 {previewArticles.slice(0, 5).map((art, idx) => {
-                  const cleanLink = getCleanArticleLink(art);
                   return (
                     <li key={art.id || idx} className="truncate">
-                      <a
-                        href={cleanLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:underline text-left text-zinc-900 font-bold"
+                      <button
+                        type="button"
+                        onClick={() => onOpenArticle && onOpenArticle(art)}
+                        className="hover:underline text-left text-zinc-900 font-bold cursor-pointer truncate max-w-full"
                         title={art.title}
                       >
                         {art.title}
-                      </a>
+                      </button>
                     </li>
                   );
                 })}
@@ -520,35 +518,35 @@ export const NewsletterSignup: React.FC<NewsletterSignupProps> = ({
                   return (
                     <div
                       key={article.id || idx}
-                      className="bg-[#faf7ee] border-2 border-black p-3 flex flex-col justify-between space-y-2 hover:bg-[#fff9d2] transition-colors"
+                      onClick={() => onOpenArticle && onOpenArticle(article)}
+                      className="bg-[#faf7ee] border-2 border-black p-3 flex flex-col justify-between space-y-2 hover:bg-[#fff9d2] transition-colors cursor-pointer"
                     >
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between text-[10px] font-mono">
                           <span className="bg-black text-[#ccff00] px-1 font-black">#0{idx + 1}</span>
                           <span className="text-zinc-600 font-bold uppercase">{article.source}</span>
                         </div>
-                        <a
-                          href={cleanLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <h5
                           className="text-xs font-black text-black leading-snug line-clamp-3 hover:underline block"
                         >
                           {article.title}
-                        </a>
+                        </h5>
                       </div>
 
                       <div className="pt-2 border-t border-zinc-300 text-[10px] font-mono flex items-center justify-between text-zinc-600">
                         <span className="bg-[#ffe600] px-1 border border-black text-black font-bold">
                           {article.category}
                         </span>
-                        <a
-                          href={cleanLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[#ff2a85] font-black hover:underline inline-flex items-center gap-0.5"
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (onOpenArticle) onOpenArticle(article);
+                          }}
+                          className="text-[#ff2a85] font-black hover:underline inline-flex items-center gap-0.5 cursor-pointer"
                         >
-                          <span>Read ➔</span>
-                        </a>
+                          <span>Read Rephrased ➔</span>
+                        </button>
                       </div>
                     </div>
                   );

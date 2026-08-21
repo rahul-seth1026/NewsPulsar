@@ -3596,9 +3596,7 @@ async function scrapeAllSources(): Promise<NewsArticle[]> {
   // Combine: processed newly scraped + remaining existing articles
   const allArticles = [...processedNew, ...existingArticles];
 
-  // Strict Unified De-duplication by Domain (URL), ID, Canonical Link, and Normalized Title
-  // Enforces that every single post has a different domain (URL)
-  const seenDomains = new Set<string>();
+  // Unified De-duplication by ID, Canonical Link, and Normalized Title to ensure ALL scraped articles are posted to website
   const seenIds = new Set<string>();
   const seenLinks = new Set<string>();
   const seenTitles = new Set<string>();
@@ -3618,27 +3616,8 @@ async function scrapeAllSources(): Promise<NewsArticle[]> {
       article.title,
       article.category
     );
-    const domain = extractDomainFromUrl(cleanLink);
     const normalizedTitle = article.title.toLowerCase().trim().replace(/[^a-z0-9]/g, '');
     const normalizedLink = cleanLink.toLowerCase().trim();
-    
-    // Check if domain, ID, link, or normalized title has already been seen in this batch
-    if (domain && seenDomains.has(domain)) {
-      // Retain richest metadata if duplicate domain instance
-      const existing = uniqueArticles.find(a => extractDomainFromUrl(a.link) === domain);
-      if (existing) {
-        if (!existing.aiSummary && article.aiSummary) {
-          existing.aiSummary = article.aiSummary;
-        }
-        if (!existing.hindi && article.hindi) {
-          existing.hindi = article.hindi;
-        }
-        if (article.imageUrl && !article.imageUrl.includes('unsplash.com') && existing.imageUrl?.includes('unsplash.com')) {
-          existing.imageUrl = article.imageUrl;
-        }
-      }
-      continue;
-    }
 
     if (normalizedTitle && seenTitles.has(normalizedTitle)) {
       continue;
@@ -3647,7 +3626,6 @@ async function scrapeAllSources(): Promise<NewsArticle[]> {
       continue;
     }
 
-    if (domain) seenDomains.add(domain);
     if (normalizedTitle) seenTitles.add(normalizedTitle);
     seenIds.add(article.id);
     seenLinks.add(normalizedLink);

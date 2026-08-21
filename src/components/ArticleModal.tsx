@@ -28,7 +28,8 @@ import {
   Compass,
   Layers,
   FileText,
-  Calendar
+  Calendar,
+  Tag
 } from 'lucide-react';
 
 interface ArticleModalProps {
@@ -498,13 +499,25 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
 
               {/* Clean Large Display Title */}
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight sm:leading-tight">
-                {article.aiSummary?.rephrasedTitle || article.title}
+                {displayTitle}
               </h1>
 
+              {/* Tags in Reader Mode */}
+              {displayTags && displayTags.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                  <span className="text-xs font-mono opacity-70 uppercase font-semibold">TAGS:</span>
+                  {displayTags.map((tag, idx) => (
+                    <span key={idx} className="px-2.5 py-0.5 text-xs rounded-full border border-current/30 font-mono opacity-90">
+                      #{tag.replace(/^#/, '')}
+                    </span>
+                  ))}
+                </div>
+              )}
+
               {/* Lead Paragraph */}
-              {(article.aiSummary?.rephrasedLead || summaryData?.rephrasedLead || summaryData?.oneLineSummary) && (
+              {(displayLead) && (
                 <p className="text-xl sm:text-2xl leading-relaxed opacity-90 font-medium italic border-l-3 border-current/40 pl-5 my-6">
-                  {article.aiSummary?.rephrasedLead || summaryData?.rephrasedLead || summaryData?.oneLineSummary}
+                  {displayLead}
                 </p>
               )}
 
@@ -840,11 +853,32 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                 <span className="text-black font-bold">
                   {formatReadingTime(article)}
                 </span>
+                <span>•</span>
+                <span className="px-2 py-0.5 bg-[#ccff00] text-black font-black uppercase text-[10px] border border-black">
+                  {displayCategory}
+                </span>
               </div>
 
               <h1 className="font-neo text-2xl sm:text-3xl md:text-4xl font-black text-black leading-tight tracking-tight">
-                {article.title}
+                {displayTitle}
               </h1>
+
+              {/* Prominent Tags Bar */}
+              {displayTags && displayTags.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                  <span className="text-[11px] font-black uppercase text-zinc-600 font-mono flex items-center gap-1">
+                    <Tag className="w-3.5 h-3.5 text-black" /> TAGS:
+                  </span>
+                  {displayTags.map((tag, idx) => (
+                    <span
+                      key={idx}
+                      className="px-2.5 py-0.5 text-xs font-mono font-bold bg-[#faf7ee] hover:bg-[#ffe600] text-black border border-black neo-shadow-sm transition-colors"
+                    >
+                      #{tag.replace(/^#/, '')}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Feature Image */}

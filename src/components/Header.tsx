@@ -143,11 +143,9 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Database className="w-3.5 h-3.5 text-black" />
               <span>{language === 'hi' ? '🗄️ डेटाबेस' : '🗄️ DATABASE'}</span>
-              {totalArticles !== undefined && totalArticles > 0 && (
-                <span className="bg-black text-[#ccff00] font-mono text-[9px] px-1 py-0.2">
-                  {totalArticles}
-                </span>
-              )}
+              <span className="bg-black text-[#ccff00] font-mono text-[9px] px-1.5 py-0.2 font-black border border-black">
+                {totalArticles} {language === 'hi' ? 'लेख' : 'SCRAPED'}
+              </span>
             </button>
             <button
               onClick={() => onNavigatePage ? onNavigatePage('dashboard') : onOpenDashboard?.()}
@@ -324,6 +322,9 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Database className="w-3.5 h-3.5 text-black shrink-0" />
               <span>{language === 'hi' ? 'डेटाबेस' : 'DATABASE'}</span>
+              <span className="bg-black text-[#ccff00] font-mono text-[10px] px-1.5 py-0.2 font-black border border-black">
+                {totalArticles}
+              </span>
             </button>
 
             {/* Dashboard Button */}

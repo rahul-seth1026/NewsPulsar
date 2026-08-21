@@ -38,10 +38,16 @@ export const Ticker: React.FC<TickerProps> = ({ breakingArticles, onSelectArticl
             <span>{isHindi ? 'ताज़ा ख़बर' : 'BREAKING'}</span>
           </span>
 
-          <a
-            href={getCleanArticleLink(activeArticle)}
-            target="_blank"
-            rel="noopener noreferrer"
+          <div
+            onClick={() => onSelectArticle(activeArticle)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onSelectArticle(activeArticle);
+              }
+            }}
             className="group flex items-center gap-2 cursor-pointer truncate flex-1 transition-colors min-w-0"
           >
             <span className="font-bold text-zinc-100 group-hover:text-[#ccff00] truncate text-xs sm:text-[13px]">
@@ -50,18 +56,15 @@ export const Ticker: React.FC<TickerProps> = ({ breakingArticles, onSelectArticl
             <span className="text-zinc-400 text-[11px] font-mono hidden md:inline">
               ({activeArticle.source})
             </span>
-          </a>
+          </div>
 
-          <a
-            href={getCleanArticleLink(activeArticle)}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="p-1 text-zinc-400 hover:text-black hover:bg-[#ffe600] border border-transparent hover:border-black transition-colors shrink-0"
-            title="Open story in separate window"
+          <button
+            onClick={() => onSelectArticle(activeArticle)}
+            className="p-1 text-[#ccff00] hover:text-black hover:bg-[#ffe600] border border-transparent hover:border-black transition-colors shrink-0 cursor-pointer text-[10px] font-mono font-bold"
+            title="Read rephrased story with tags"
           >
-            <ExternalLink className="w-3.5 h-3.5" />
-          </a>
+            READ REPHRASED
+          </button>
 
         </div>
 

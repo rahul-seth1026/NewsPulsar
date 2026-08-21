@@ -74,11 +74,17 @@ export const NewsCarousel: React.FC<NewsCarouselProps> = ({ articles, onOpenArti
             const cleanLink = getCleanArticleLink(article);
 
             return (
-              <a
+              <div
                 key={article.id}
-                href={cleanLink}
-                target="_blank"
-                rel="noopener noreferrer"
+                onClick={() => onOpenArticle(article)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onOpenArticle(article);
+                  }
+                }}
                 className="flex items-center gap-3 bg-white p-2.5 border-2 border-black hover:bg-[#ffe600]/30 hover:border-[#ff2a85] neo-shadow-sm transition-all cursor-pointer group min-w-0"
               >
                 {/* Thumbnail */}
@@ -105,10 +111,10 @@ export const NewsCarousel: React.FC<NewsCarouselProps> = ({ articles, onOpenArti
                     <span className="text-[9px] font-mono text-zinc-600 truncate">
                       {article.source}
                     </span>
-                    <ExternalLink className="w-2.5 h-2.5 text-zinc-400 group-hover:text-black ml-auto shrink-0" />
+                    <Sparkles className="w-2.5 h-2.5 text-zinc-400 group-hover:text-black ml-auto shrink-0" />
                   </div>
                 </div>
-              </a>
+              </div>
             );
           })}
         </div>

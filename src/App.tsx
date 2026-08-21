@@ -616,7 +616,7 @@ export default function App() {
         }}
         activePage={activePage}
         onNavigatePage={handleNavigatePage}
-        totalArticles={data?.articles?.length || 0}
+        totalArticles={data?.totalArticles ?? (data?.articles?.length || 0)}
         language={language}
         onToggleLanguage={setLanguage}
       />
@@ -789,7 +789,13 @@ export default function App() {
               {/* Results Counter & Active Filter Tags */}
               <div className="flex items-center justify-between text-xs text-zinc-800 font-neo font-bold">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span>Showing <strong className="text-black font-mono font-black bg-[#ffe600] border border-black px-2 py-0.5">{filteredArticles.length}</strong> verified stories</span>
+                  <span>
+                    {language === 'hi' ? 'दिखाए जा रहे हैं ' : 'Showing '}
+                    <strong className="text-black font-mono font-black bg-[#ffe600] border border-black px-2 py-0.5">{filteredArticles.length}</strong>
+                    {language === 'hi'
+                      ? ` / ${data?.totalArticles ?? data?.articles?.length ?? filteredArticles.length} कुल स्क्रैप किए गए लेख`
+                      : ` of ${data?.totalArticles ?? data?.articles?.length ?? filteredArticles.length} Total Scraped Articles`}
+                  </span>
                   {showBookmarksOnly && (
                     <span className="px-2 py-0.5 bg-[#ff2a85] text-white border border-black font-black">
                       Saved Only

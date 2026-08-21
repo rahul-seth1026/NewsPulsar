@@ -490,31 +490,34 @@ export function extractDomainFromUrl(urlStr?: string): string {
 }
 
 /**
- * Enforces domain (URL) uniqueness across a list of articles, ensuring no two posts
- * in the feed share the same domain.
+ * Cleans and deduplicates article links without dropping valid distinct articles
+ * from the same news publisher, ensuring all scraped articles are posted.
  */
 export function ensureUniqueDomainPerPost<T extends { link: string; source?: string; title: string; id?: string; description?: string; category?: string }>(
   articles: T[]
 ): T[] {
   if (!Array.isArray(articles)) return [];
-  const seenDomains = new Set<string>();
+  const seenIds = new Set<string>();
   const seenTitles = new Set<string>();
+  const seenLinks = new Set<string>();
   const result: T[] = [];
 
   for (const article of articles) {
     const cleanLink = getCleanArticleLink(article);
-    const domain = extractDomainFromUrl(cleanLink);
     const normTitle = (article.title || '').toLowerCase().trim().replace(/[^a-z0-9]/g, '');
+    const normLink = cleanLink.toLowerCase().trim();
+    const id = article.id || '';
 
     if (normTitle && seenTitles.has(normTitle)) {
       continue;
     }
-    if (domain && seenDomains.has(domain)) {
+    if ((id && seenIds.has(id)) || (normLink && seenLinks.has(normLink))) {
       continue;
     }
 
-    if (domain) seenDomains.add(domain);
     if (normTitle) seenTitles.add(normTitle);
+    if (id) seenIds.add(id);
+    if (normLink) seenLinks.add(normLink);
 
     result.push({
       ...article,

@@ -33,6 +33,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
   isBookmarked,
   onToggleBookmark,
   onOpenArticle,
+  onSelectTag,
   language = 'en',
 }) => {
   const initialImg = getArticleImageUrl(article.imageUrl, article.category, article.title);
@@ -59,11 +60,11 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
 
   const handleCardClick = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
-    // If button was clicked (e.g. AI Summary, Bookmark, Share), let button handler manage it
+    // If button was clicked (e.g. Bookmark, Share), let button handler manage it
     if (target.closest('button')) {
       return;
     }
-    window.open(cleanLink, '_blank', 'noopener,noreferrer');
+    onOpenArticle(article);
   };
 
   const handleShare = async (e: React.MouseEvent) => {
@@ -83,6 +84,10 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     }
   };
 
+  const displayTags = article.tags && article.tags.length > 0
+    ? article.tags
+    : (article.aiSummary?.tags || []);
+
   return (
     <article
       onClick={handleCardClick}
@@ -90,15 +95,9 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
       aria-label={`Article: ${displayTitle}`}
     >
       {/* Image Frame */}
-      <a
-        href={cleanLink}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={(e) => {
-          const target = e.target as HTMLElement;
-          if (target.closest('button')) e.preventDefault();
-        }}
-        className="relative h-48 sm:h-52 w-full overflow-hidden bg-zinc-100 border-b-2 border-black block"
+      <div
+        onClick={() => onOpenArticle(article)}
+        className="relative h-48 sm:h-52 w-full overflow-hidden bg-zinc-100 border-b-2 border-black block cursor-pointer"
       >
         <img
           src={imgSrc}
@@ -138,7 +137,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         >
           <Bookmark className={`w-3.5 h-3.5 ${isBookmarked ? 'fill-[#ff2a85]' : ''}`} />
         </button>
-      </a>
+      </div>
 
       {/* Article Body Content */}
       <div className="flex-1 p-4 flex flex-col justify-between gap-3">
@@ -156,21 +155,40 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             </span>
           </div>
 
-          {/* Headline - Opens in New Window */}
-          <a
-            href={cleanLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="font-neo font-black text-base sm:text-lg text-black group-hover:text-[#ff2a85] transition-colors line-clamp-2 leading-snug tracking-tight block hover:underline"
+          {/* Headline - Opens Rephrased Article Modal */}
+          <h3
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenArticle(article);
+            }}
+            className="font-neo font-black text-base sm:text-lg text-black group-hover:text-[#ff2a85] transition-colors line-clamp-2 leading-snug tracking-tight block hover:underline cursor-pointer"
           >
             {displayTitle}
-          </a>
+          </h3>
 
           {/* Narrative / Lead Excerpt */}
           <p className="mt-2 text-xs sm:text-[13px] text-zinc-800 line-clamp-3 leading-relaxed font-body font-medium">
             {displayLead}
           </p>
+
+          {/* Article Tags Badges */}
+          {displayTags.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-2.5">
+              {displayTags.slice(0, 3).map((tag, idx) => (
+                <span
+                  key={idx}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (onSelectTag) onSelectTag(tag);
+                    else onOpenArticle(article);
+                  }}
+                  className="text-[10px] font-mono font-bold bg-[#faf7ee] text-zinc-800 px-1.5 py-0.5 border border-zinc-300 hover:border-black hover:bg-[#ffe600] transition-colors"
+                >
+                  #{tag.replace(/^#/, '')}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Footer Actions Row */}
@@ -182,10 +200,10 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
               onOpenArticle(article);
             }}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-black text-black bg-[#ccff00] hover:bg-[#b8e600] border-2 border-black neo-shadow-sm transition-all cursor-pointer active:translate-x-0.5 active:translate-y-0.5"
-            title="Read AI Analysis and Summary"
+            title="Read Rephrased Article with Tags"
           >
             <Sparkles className="w-3.5 h-3.5" />
-            <span>{isHindi ? '⚡ AI सम्पूर्ण विवरण' : 'AI SUMMARY'}</span>
+            <span>{isHindi ? '⚡ AI सम्पूर्ण विवरण' : 'READ REPHRASED'}</span>
           </button>
 
           <div className="flex items-center gap-1.5 text-black">
@@ -197,17 +215,18 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             >
               <Share2 className="w-3.5 h-3.5" />
             </button>
-            <a
-              href={cleanLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenArticle(article);
+              }}
               className="px-2 py-1.5 bg-black hover:bg-zinc-800 text-[#ccff00] font-black text-xs border border-black neo-shadow-sm flex items-center gap-1 transition-all cursor-pointer"
-              title="Open full post in new window"
+              title="Open rephrased article with tags"
             >
-              <span className="hidden sm:inline">OPEN</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
+              <span className="hidden sm:inline">READ</span>
+              <Sparkles className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
 

@@ -66,7 +66,7 @@ export const RefreshTimerBar: React.FC<RefreshTimerBarProps> = ({
         <div className="flex items-center justify-center sm:justify-start gap-2 sm:gap-3 flex-wrap text-center sm:text-left w-full md:w-auto">
           <span className="flex items-center gap-1.5 font-semibold text-slate-800 text-[11px] px-2.5 py-1 bg-white border border-slate-200 rounded-xs shadow-2xs">
             <Database className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-            <span>{totalArticles}</span> Stories Live
+            <span>{totalArticles} Total Articles Scraped</span>
           </span>
           <span className="inline-flex items-center gap-1 text-emerald-700 font-medium text-[11px] bg-emerald-50 px-2 py-0.5 border border-emerald-200 rounded-xs">
             <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />

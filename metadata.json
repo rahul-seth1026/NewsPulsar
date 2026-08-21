@@ -1,0 +1,8 @@
+{
+  "name": "Remix NewsPulse",
+  "description": "Imported from GitHub: rahulseth7/NewsPulse",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
